@@ -343,7 +343,7 @@ buffer.append(new_frame)
 
 A `deque` does not store data in a single solid block. Instead, it uses a **doubly-linked chain of memory blocks**.
 
-Every block knows exactly where the next block begins and where the previous one ends. When you remove an item from the front, Python simply updates a pointer link to point to the next block, instantly disconnecting the old head. No elements are ever shifted in memory, ensuring that insertions and deletions at either endpoint run at constant, lightning-fast speed ($O(1)$) regardless of whether your queue has 5 items or 5 million.
+Every block knows exactly where the next block begins and where the previous one ends. When you remove an item from the front, Python simply updates a pointer link to point to the next block, instantly disconnecting the old head. No elements are ever shifted in memory, ensuring that insertions and deletions at either endpoint run at constant, lightning-fast speed (O(1)) regardless of whether your queue has 5 items or 5 million.
 
 ---
 
@@ -391,4 +391,4 @@ next_up = heapq.heappop(packet_buffer)      # Fast extraction
 
 When you push an item using `heapq`, Python treats the list like a binary tree where every parent node is smaller than or equal to its children.
 
-Instead of re-sorting the whole list, Python inserts the new item at the very end and vibrates it up its specific structural branch using minimal swaps ($O(\log N)$ steps). It ignores the rest of the list entirely. The structural mathematics guarantee that the smallest item always filters directly to index `0`. This gives your system instant, constant-time visibility ($O(1)$) into the highest-priority item without needing to fully sort the collection.
+Instead of re-sorting the whole list, Python inserts the new item at the very end and vibrates it up its specific structural branch using minimal swaps ($O(\log N)$ steps). It ignores the rest of the list entirely. The structural mathematics guarantee that the smallest item always filters directly to index `0`. This gives your system instant, constant-time visibility (O(1)) into the highest-priority item without needing to fully sort the collection.
