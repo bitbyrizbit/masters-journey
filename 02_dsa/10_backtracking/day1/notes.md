@@ -126,16 +126,16 @@ Good pruning dramatically reduces the search space while still preserving correc
   * **Space:** $O(n)$ space complexity mapping the maximum recursive height and call stack depth of the execution pipeline.
 * **Pointer Flow:**
 ```text
-Binary Include/Exclude Decision Tree for nums =:
+Binary Include/Exclude Decision Tree:
                      []
                   /      \
               +1          -1
              /              \
-          [1]              []
-         /   \            /   \
-      +2      -2      +2      -2
-     /         \      /         \
- [1,2]      [1]    [2]        []
+          [1]               []
+         /   \            /    \
+      +2      -2        +2      -2
+     /         \        /         \
+ [1,2]         [1]    [2]          []
 ```
 * **Pattern Recognition:**
   * Use a binary include-exclude traversal strategy when:
@@ -158,19 +158,30 @@ Binary Include/Exclude Decision Tree for nums =:
   * **Space:** $O(n)$ auxiliary space to handle the depth of the recursive stack.
 * **Pointer Flow:**
 ```text
-Duplicate pruning tree transitions for sorted nums =:
-                          i=0 (Element 1)
-                         /               \
-                 Include 1                Exclude 1, i=1, i=1                 [], i=1
-                 /        \               /       \
-           Include 2    Exclude 2   Include 2   Exclude 2, i=2, i=2, i=2     [], i=2
+Duplicate pruning tree transitions:
+nums = [1,2,2] (Sorted)
 
-                          |                       |
-            (nums[1] == nums[2], so i throttles forward from 1 to 2!)
+                     dfs(0)
+                        []
+                     /      \
+                 +1          -1
+                /              \
+             dfs(1)          dfs(1)
+              [1]                []
+             /   \             /   \
+          +2      -2        +2     -2*
+         /         |        /        |
+      [1,2]    skip dup    [2]    skip dup
+        |          |        |        |
+       +2         dfs(3)   +2      dfs(3)
+        |                   |
+     [1,2,2]               [2,2]
 
-                          |                       |
-                     dfs(i=3)                dfs(i=3)
-                     Yields [1]              Yields []
+
+* Before taking the exclusion branch, skip all adjacent duplicates.
+
+while i+1 < len(nums) and nums[i] == nums[i+1]:
+    i += 1
 ```
 * **Pattern Recognition:**
   * Use a sorted skip constraint loop when:
@@ -194,20 +205,32 @@ Duplicate pruning tree transitions for sorted nums =:
   * **Space:** $O(t/m)$ tracking the height configuration of the deep recursive call stack frames.
 * **Pointer Flow:**
 ```text
-Infinite reuse choice forks for nums =, target = 7:
-                         dfs(i=0, total=0)
-                         /                 \
-               Include 2 (Index stays 0)    Exclude 2 (Index moves to 1)
-                 dfs(0, total=2)              dfs(1, total=0)
-                 /             \
-       Include 2 (Index stays 0) Exclude 2
-         dfs(0, total=4)         dfs(1, total=2)
-         /             \
-   Include 2 (Stays 0)  Exclude 2 -> Pushes 3 -> dfs(1, total=2+2+2+3=9) -> >7 Pruned!
-   dfs(0, total=6)
-   /             \
-Include 2       Exclude 2 -> Pushes 3 -> dfs(1, total=7) -> MATCH! Saved.
-dfs(0, total=8) >7 Pruned!
+Infinite reuse choice forks:
+candidates = [2,3,6,7]
+target = 7
+
+                    dfs(i=0,total=0)
+                      ([])
+                     /             \
+             Include 2          Exclude 2
+            (stay i=0)          (i=1)
+             /                     \
+      dfs(0,2)                 dfs(1,0)
+        [2]
+       /   \
+ +2(stay)   Skip 2
+    |          |
+ dfs(0,4)   dfs(1,2)
+   [2,2]
+   /     \
+ +2       Skip
+ |          |
+dfs(0,6)  dfs(1,4)
+ [2,2,2]
+ /      \
++2       +3
+ |        |
+8>X    total=7 (Save [2,2,3])
 ```
 * **Pattern Recognition:**
   * Use an index-anchored inclusion loop when:
