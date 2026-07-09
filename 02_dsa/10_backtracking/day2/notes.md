@@ -10,15 +10,19 @@
   * **Space:** $O(n)$ to handle the maximum depth allocation bounds of the recursive call stack.
 * **Pointer Flow:**
 ```text
-Duplicate pruning tree forks for sorted candidates =, target = 8:
-                         dfs(i=0, total=0)
-                         /                 \
-                 Include 1                  Exclude 1
-               dfs(1, total=1)              dfs(1, total=0)
-               /             \                     |
-       Include 1              Exclude 1            |  (Throttles past index 1!)
-     dfs(2, total=2)       dfs(2, total=1)         v
-                                            dfs(2, total=0) -> Skips second 1 entirely
+Duplicate pruning tree forks:
+dfs(0,0)
+├── Include 1
+│   └── dfs(1,1)
+│       ├── Include 1
+│       │   └── dfs(2,2)
+│       │       ...
+│       └── Exclude 1
+│           └── Skip duplicate 1
+│               └── dfs(2,1)
+└── Exclude 1
+    └── Skip duplicate 1
+        └── dfs(2,0)
 ```
 * **Pattern Recognition:**
   * Use a binary include-exclude duplicate pruning layout when:
@@ -41,17 +45,21 @@ Duplicate pruning tree forks for sorted candidates =, target = 8:
   * **Space:** $O(k)$ auxiliary space memory bounded by the maximum stack depth allocation.
 * **Pointer Flow:**
 ```text
-Loop range choice tree steps for n = 4, k = 2:
-                           dfs(start=1)
-                    /    /    \    \
-                  i=1  i=2    i=3  i=4
-                  /     |      \
-            dfs(2)    dfs(3)  dfs(4) -> Appends 4 -> (Saved!)
-            /   \       |
-         i=2     i=3   i=3
-
-         |        |     |
-           (All saved immediately at length k=2)
+Loop range choice tree steps:
+dfs(1)
+├── Pick 1
+│   └── dfs(2)
+│       ├── Pick 2 -> [1,2]
+│       ├── Pick 3 -> [1,3]
+│       └── Pick 4 -> [1,4]
+├── Pick 2
+│   └── dfs(3)
+│       ├── Pick 3 -> [2,3]
+│       └── Pick 4 -> [2,4]
+├── Pick 3
+│   └── dfs(4)
+│       └── Pick 4 -> [3,4]
+└── Pick 4
 ```
 * **Pattern Recognition:**
   * Use loop-driven range backtracking when:
@@ -74,17 +82,21 @@ Loop range choice tree steps for n = 4, k = 2:
   * **Space:** $O(n)$ auxiliary memory space corresponding to the depth of the recursive call stack.
 * **Pointer Flow:**
 ```text
-In-place memory swapping tree tracks for nums =:
-                           dfs(start=0)
-                    /          |          \
-               i=0(Swap 1,1)  i=1(Swap 1,2)  i=2(Swap 1,3)
-                          
+In-place memory swapping tree tracks:
+[1,2,3]
 
-                    |              |              |
-               dfs(start=1)   dfs(start=1)   dfs(start=1)
-                /       \
-          i=1(Swap 2,2) i=2(Swap 2,3)
-                (Both hit start==len; Saved!)
+start=0
+
+Swap(0,0)
+├── [1,2,3]
+│   ├── Swap(1,1)
+│   │   └── [1,2,3]
+│   └── Swap(1,2)
+│       └── [1,3,2]
+
+Swap(0,1)
+├── [2,1,3]
+│   ├── ...
 ```
 * **Pattern Recognition:**
   * Use in-place pointer swapping when:
@@ -107,15 +119,15 @@ In-place memory swapping tree tracks for nums =:
   * **Space:** $O(n)$ space allocations to manage the unique key frequency map balances and stack frames.
 * **Pointer Flow:**
 ```text
-Frequency map tree selections for nums = -> count = {1: 2, 2: 1}:
-                           dfs()
-                         /       \
-                  Pick Key 1      Pick Key 2
-               count={1:1, 2:1}  count={1:2, 2:0}
-                 Perm:         Perm:
-                 /       \             |
-           Pick Key 1   Pick Key 2  Pick Key 1 (Only option left)
-         count={1:0,2:1} count={1:1,2:0}
+Frequency map tree selections:
+                               dfs()
+                         /              \
+                  Pick Key 1          Pick Key 2
+               count={1:1, 2:1}    count={1:2, 2:0}
+                   Perm:                    Perm:
+                 /       \                    |
+           Pick Key 1      Pick Key 2     Pick Key 1 (Only option left)
+        count={1:0,2:1}  count={1:1,2:0}
            Perm:     Perm:  Perm:
 ```
 * **Pattern Recognition:**
@@ -142,10 +154,10 @@ Frequency map tree selections for nums = -> count = {1: 2, 2: 1}:
 Cartesian path expansions for digits = "23" -> Mapping {"2": "abc", "3": "def"}:
                          dfs(i=0, current_str="")
                     /               |               \
-                char='a'          char='b'          char='c'
-            dfs(1, "a")        dfs(1, "b")        dfs(1, "c")
+              char='a'           char='b'           char='c'
+             dfs(1, "a")        dfs(1, "b")        dfs(1, "c")
              /   |   \
-          char='d' 'e'  'f'
+      char='d'  'e'   'f'
           /      |     \
        "ad"    "ae"    "af" (All hit len == 2; Saved!)
 ```
