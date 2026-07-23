@@ -148,7 +148,7 @@ Fill in these 6 boxes for every DP problem before writing code:
 │  BOX 1 — STATE                                                  │
 │  Define dp[i] in one complete English sentence.                 │
 ├─────────────────────────────────────────────────────────────────┤
-│  BOX 2 — TRANSITION (State → Choices → Recurrence)             │
+│  BOX 2 — TRANSITION (State → Choices → Recurrence)              │
 │  List all choices at state i and write the recurrence formula.  │
 ├─────────────────────────────────────────────────────────────────┤
 │  BOX 3 — BASE CASES                                             │
@@ -158,7 +158,7 @@ Fill in these 6 boxes for every DP problem before writing code:
 │  Determine order of filling (Left→Right or Right→Left) + WHY.   │
 ├─────────────────────────────────────────────────────────────────┤
 │  BOX 5 — ANSWER LOCATION                                        │
-│  Specify exact variable/cell containing final answer.          │
+│  Specify exact variable/cell containing final answer.           │
 ├─────────────────────────────────────────────────────────────────┤
 │  BOX 6 — OPTIMIZATION                                           │
 │  Can space be compressed to O(1) rolling variables?             │
