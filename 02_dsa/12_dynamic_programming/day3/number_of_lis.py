@@ -1,0 +1,25 @@
+class Solution:
+    def findNumberOfLIS(self, nums: list[int]) -> int:
+        if not nums:
+            return 0
+            
+        n = len(nums)
+        length = [1] * n
+        count = [1] * n
+        
+        for i in range(n):
+            for j in range(i):
+                if nums[j] < nums[i]:
+                    if length[j] + 1 > length[i]:
+                        length[i] = length[j] + 1
+                        count[i] = count[j]
+                    elif length[j] + 1 == length[i]:
+                        count[i] += count[j]
+                        
+        max_len = max(length)
+        total_count = sum(c for l, c in zip(length, count) if l == max_len)
+        return total_count
+
+nums_input = [1, 3, 5, 4, 7]
+sol = Solution()
+print(sol.findNumberOfLIS(nums_input))  # Output: 2 (subsequences are [1, 3, 4, 7] and [1, 3, 5, 7])
