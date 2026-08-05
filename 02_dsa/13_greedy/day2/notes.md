@@ -107,7 +107,7 @@ i=4: 4 > max_reach(3) -> Unreachable -> False.
     - The problem asks whether the end of an array or some target index is reachable via variable-length jumps.
     - The exact sequence of jumps does not matter — only the maximum possible reach at each position.
 * **Core Insight:** Reachability is a frontier problem, not a path problem. The moment you stop asking "which exact path reaches the destination?" and start asking "what is the farthest boundary I can push from here?", the exponential search tree collapses to a single scalar sweep. The key property that enables this is monotonicity: if you can reach position `i`, the maximum reach from all positions up to `i` is already encoded in `max_reach`.
-* **Mistakes Made:** We simulated explicit jumps by building a visited set and stepping through each reachable position from the current one — effectively BFS without a queue. While conceptually correct, this is $O(N \cdot \text{max\_jump})$ in the worst case. The scalar `max_reach` eliminates redundant revisits entirely.
+* **Mistakes Made:** We simulated explicit jumps by building a visited set and stepping through each reachable position from the current one — effectively BFS without a queue. While conceptually correct, this is $O(N \cdot \text{max jump})$ in the worst case. The scalar `max_reach` eliminates redundant revisits entirely.
 * **What I Learned:** Reachability is not a path-finding problem — it is a boundary-tracking problem. The distinction determines whether you write BFS ($O(N^2)$) or a scalar sweep ($O(N)$).
 
 ---
