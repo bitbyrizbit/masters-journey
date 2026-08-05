@@ -1,31 +1,22 @@
-from typing import List
-
 class Solution:
-    def summaryRanges(self, nums: List[int]) -> List[str]:
-        """
-        Returns the smallest sorted list of ranges that cover all the numbers in the array exactly.
-        """
+    def summaryRanges(self, nums):
         if not nums:
             return []
             
-        ranges = []
+        res = []
         start = nums[0]
         
         for i in range(1, len(nums)):
-            # If the current number is not consecutive to the previous one, the range breaks.
             if nums[i] != nums[i - 1] + 1:
-                # Format the completed range
                 if start == nums[i - 1]:
-                    ranges.append(str(start))
+                    res.append(str(start))
                 else:
-                    ranges.append(f"{start}->{nums[i - 1]}")
-                # Start tracking the new range
+                    res.append(f"{start}->{nums[i - 1]}")
                 start = nums[i]
                 
-        # Handle the final range after the loop finishes
         if start == nums[-1]:
-            ranges.append(str(start))
+            res.append(str(start))
         else:
-            ranges.append(f"{start}->{nums[-1]}")
+            res.append(f"{start}->{nums[-1]}")
             
-        return ranges
+        return res

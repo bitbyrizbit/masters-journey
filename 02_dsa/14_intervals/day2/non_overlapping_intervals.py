@@ -1,26 +1,16 @@
-from typing import List
-
 class Solution:
-    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
-        """
-        Returns the minimum number of intervals to remove to make the rest non-overlapping.
-        """
+    def eraseOverlapIntervals(self, intervals):
         if not intervals:
             return 0
             
-        # Sort by END time (Earliest Finish Time First)
         intervals.sort(key=lambda x: x[1])
+        ans = 0
+        end = float('-inf')
         
-        removals = 0
-        prev_end = float('-inf')
-        
-        for start, end in intervals:
-            # If the current interval starts after or exactly when the previous one ends
-            if start >= prev_end:
-                # Keep it, and update the boundary
-                prev_end = end
+        for s, e in intervals:
+            if s >= end:
+                end = e
             else:
-                # Overlap! We remove the current one (because the previous one ended earlier)
-                removals += 1
+                ans += 1
                 
-        return removals
+        return ans

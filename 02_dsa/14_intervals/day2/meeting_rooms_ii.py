@@ -1,28 +1,17 @@
-from typing import List
 import heapq
 
 class Solution:
-    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        """
-        Returns the minimum number of conference rooms required.
-        """
+    def minMeetingRooms(self, intervals):
         if not intervals:
             return 0
             
-        # Sort by start time so we process meetings in chronological order
         intervals.sort(key=lambda x: x[0])
+        h = []
         
-        # Min-heap to track the END TIMES of active meetings
-        heap = []
-        
-        for start, end in intervals:
-            # If the earliest ending meeting finishes before or when this meeting starts
-            if heap and heap[0] <= start:
-                # Reuse the room! Update its end time.
-                heapq.heapreplace(heap, end)
+        for s, e in intervals:
+            if h and h[0] <= s:
+                heapq.heapreplace(h, e)
             else:
-                # No room is free, open a new room
-                heapq.heappush(heap, end)
+                heapq.heappush(h, e)
                 
-        # The size of the heap is the peak number of rooms needed simultaneously
-        return len(heap)
+        return len(h)
